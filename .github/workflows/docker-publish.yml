@@ -1,16 +1,17 @@
 name: Build and Publish Docker Image
 
+# uruchamia workflow przy pushu do main
 on:
   push:
     branches:
-      - main  # lub master, zależnie od Twojej gałęzi
+      - main
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Pobranie repo
+      # 1️⃣ Pobranie repozytorium
       - uses: actions/checkout@v3
 
       # 2️⃣ Logowanie do GitHub Container Registry
@@ -24,6 +25,9 @@ jobs:
       # 3️⃣ Budowanie i push obrazu
       - name: Build and push Docker image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}/pdf2json-service:latest
+          # Zmieniamy na namespace użytkownika (nie organizacji)
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/pdf2json-service:latest
+          echo "Building Docker image $IMAGE_NAME"
           docker build -t $IMAGE_NAME .
+          echo "Pushing Docker image $IMAGE_NAME"
           docker push $IMAGE_NAME
